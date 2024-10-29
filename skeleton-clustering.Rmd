@@ -104,6 +104,17 @@ gg2=ggplot(data=data.frame("X_1"=df$data[,1],"X_2"=df$data[,2]),aes(x=X_1,y=X_2)
 grid.arrange(gg1,gg2,ncol=2)
 
 ```
+## Edge construction
+
+Let $c_1,c_2,\ldots,c_k$ be the given knots and we use $\mathcal{C}=\left\{c_1,c_2,\ldots,c_k\right\}$ to denote their collection of them.
+
+-   We add an edge between a pair of knots if they are neighbors, with the neighboring condition being that the corresponding Voronoi cells share a common boundary.
+
+-   The Voronoi cell, or Voronoi region, $\mathbb{C}_j$ associated with a knot $c_j$ is the set of all points in $\mathcal{X}$ whose distance to $c_j$ is the smallest compared to other knots. That is, $\mathbb{C}_j=\left\{ \boldsymbol{x}\in\mathcal{X}:d\left(\boldsymbol{x},c_j\right)\leq d\left(\boldsymbol{x},c_\ell\right)\forall \ell\neq j\right\}$ where $d\left(\boldsymbol{x},\boldsymbol{y}\right)$ is the usual Euclidean distance.
+
+-   Such resulting graph is the Delaunay Triangulation of the set of knots $\mathcal{C}$ and we denote is as
+
+-   But in case of high dimensional data, it becomes computationally expensive. Therefore, in practice we approximate the exact Delaunay Triangulation with $\widehat{DT}\left(\mathcal{C}\right)$ by examining the 2-nearest knots of the sample data points.
 
 
 ## Edge Construction
