@@ -25,6 +25,8 @@ knitr::opts_chunk$set(echo = FALSE)
     - The rate of convergence for the density estimates is $\mathcal{O}_\mathbb{P}(n^{-\frac{1}{d+4}})$
     
   - **Hierarchical Clustering:**
+    - Problem with non-convex clusters persists. 
+    -
     
 ## Skeleton Clustering Framework.
 
