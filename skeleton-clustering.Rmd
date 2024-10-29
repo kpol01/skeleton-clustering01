@@ -15,19 +15,17 @@ knitr::opts_chunk$set(echo = FALSE)
 
 ## Traditional Clustering Methods
 
-  - **k-means clustering:** 
-    - Unable to detect non-convex clusters.
-    - The center of a non-convex cluster falls outside the cluster itself and may come close to observations from a different cluster.
-    - In high dimension k-means algorithm may assign all the points to a single cluster. 
-    
-  - **Density Based Clustering:**
-    - To estimate the underlying PDF and detect clusters based on the PDF. 
-    - The rate of convergence for the density estimates is $\mathcal{O}_\mathbb{P}(n^{-\frac{1}{d+4}})$
-    
-  - **Hierarchical Clustering:**
-    - Problem with non-convex clusters persists. 
-    -
-    
+-   **k-means clustering:**
+    -   Unable to detect non-convex clusters.
+    -   The center of a non-convex cluster falls outside the cluster itself and may come close to observations from a different cluster.
+    -   In high dimension k-means algorithm may assign all the points to a single cluster.
+-   **Density Based Clustering:**
+    -   To estimate the underlying PDF and detect clusters based on the PDF.
+    -   The rate of convergence for the density estimates is $\mathcal{O}_\mathbb{P}(n^{-\frac{1}{d+4}})$
+-   **Hierarchical Clustering:**
+    -   Problem with non-convex clusters persists.
+    -   If any pair of the points in two different clusters lie very close to each other, the two clusters may get merged in this method. 
+
 ## Skeleton Clustering Framework.
 
 **Input :** Observations $X_1,X_2,\ldots,X_N$, final number of clusters $S$.
@@ -38,13 +36,17 @@ knitr::opts_chunk$set(echo = FALSE)
 4.  **Knots segmentation** : Use linkage criterion to segment knots into $S$ groups based on the edge weights.
 5.  **Assignment of labels** : Assign a cluster label to each observation based on which knot group the nearest knot belongs to.
 
+
+
 ## Knot construction
 
 -   Some knots are constructed to give a concise representation of the data structure.
 -   In practice we use $k$-Means to choose $k=\left\lfloor\sqrt{n}\right\rfloor$ knots, where $n$ is the number of samples.
 -   Empirically robustness performance with sufficient number of knots.
 
-```{r,echo=FALSE}
+## Knot Construction
+
+```{r,echo=FALSE, fig.height = 5.5}
 #' Generating Yinyang data
 #'
 #' @param n_m number of points in each of the two moon shapes. Positive integer value or vector with length=2
@@ -102,3 +104,34 @@ gg2=ggplot(data=data.frame("X_1"=df$data[,1],"X_2"=df$data[,2]),aes(x=X_1,y=X_2)
 grid.arrange(gg1,gg2,ncol=2)
 
 ```
+
+
+## Edge Construction
+
+```{r include=FALSE}
+df=Yinyang_data(n_c = 0,n_r = 0)
+
+
+library(skeletonClus)
+library(ggplot2)
+library(gridExtra)
+library(latex2exp)
+library(ggvoronoi)
+
+
+data=data.frame("X_1"=df$data[,1],"X_2"=df$data[,2])
+#ggplot(data,aes(x=X_1,y=X_2))+
+  #geom_point()+labs(x=TeX("$\\X_1$"),y=TeX("$\\X_2$"))
+
+
+
+
+```
+```{r warning=FALSE, out.height="80%", fig.asp = 2, fig.align = 'center'}
+skeleton = skeletonCons(data, rep = 1000, k = 20)
+
+ggplot(as.data.frame(skeleton$centers), aes(X_1,X_2)) + stat_voronoi(geom = "path", lty = 2) +geom_point(data = data, col = 'darkgrey', size = 2) + 
+  geom_point(data = as.data.frame(skeleton$centers), col = 'red', size = 4)
+```
+
+
