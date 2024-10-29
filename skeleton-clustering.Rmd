@@ -12,10 +12,20 @@ output:
 ```{r setup, include=FALSE, comment=NA}
 knitr::opts_chunk$set(echo = FALSE)
 ```
+
 ## Traditional Clustering Methods
 
-
-
+  - **k-means clustering:** 
+    - Unable to detect non-convex clusters.
+    - The center of a non-convex cluster falls outside the cluster itself and may come close to observations from a different cluster.
+    - In high dimension k-means algorithm may assign all the points to a single cluster. 
+    
+  - **Density Based Clustering:**
+    - To estimate the underlying PDF and detect clusters based on the PDF. 
+    - The rate of convergence for the density estimates is $\mathcal{O}_\mathbb{P}(n^{-\frac{1}{d+4}})$
+    
+  - **Hierarchical Clustering:**
+    
 ## Skeleton Clustering Framework.
 
 **Input :** Observations $X_1,X_2,\ldots,X_N$, final number of clusters $S$.
@@ -35,14 +45,3 @@ knitr::opts_chunk$set(echo = FALSE)
 ```{r}
 
 ```
-
-
-
-
-
-
-
-
-
-
-
