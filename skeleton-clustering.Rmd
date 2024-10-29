@@ -24,7 +24,44 @@ knitr::opts_chunk$set(echo = FALSE)
     -   The rate of convergence for the density estimates is $\mathcal{O}_\mathbb{P}(n^{-\frac{1}{d+4}})$
 -   **Hierarchical Clustering:**
     -   Problem with non-convex clusters persists.
-    -   If any pair of the points in two different clusters lie very close to each other, the two clusters may get merged in this method. 
+    -   If any pair of the points in two different clusters lie very close to each other, the two clusters may get merged in this method.
+
+
+## The YinYang Data
+```{r, out.height="80%", fig.align="center"}
+set.seed(seed=1234)
+Yinyang_data = function(n_m=400,n_c=200,n_r=2000,sd_c=0.1,sd_r=0.1, d=2, sd_high=0.1){
+  X_m = clusterSim::shapes.two.moon(n_m)
+  
+  x1 = cbind(stats::rnorm(n_c, mean= 0.5, sd=sd_c), stats::rnorm(n_c, mean= -1.5, sd=sd_c))
+  x2 = cbind(stats::rnorm(n_c, mean= -1, sd=sd_c), stats::rnorm(n_c, mean= 0.5, sd=sd_c))
+  
+  th = stats::runif(n_r,0,2*pi)
+  x  = 2.5*cos(th) - 0.25
+  y  = 2.5*sin(th) -0.5
+  x3  = cbind(x,y) + matrix(stats::rnorm(2*length(x), sd=sd_r), ncol=2)
+  
+  X = rbind(X_m$data, x1, x2, x3)
+  
+  if(d==2){
+    X0 = X
+  }
+  if(d>2){
+    n = nrow(X)
+    d_add = d-2
+    X0 = cbind(X, matrix(stats::rnorm(d_add*(n),  sd = sd_high), nrow = n))
+  }
+  Y0 = c(X_m$clusters, rep(3,n_c), rep(4,n_c), rep(5,n_r))
+  return(list(data = X0, clus = Y0))
+}
+
+library(ggplot2)
+
+data=as.data.frame(Yinyang_data())
+ggplot(data = data) + geom_point(aes(x = data.x, y = data.y))
+```
+
+
 
 ## Skeleton Clustering Framework.
 
@@ -35,8 +72,6 @@ knitr::opts_chunk$set(echo = FALSE)
 3.  **Edge weights construction** : Add weights to each edge using either Voronoi density, Face density or Tube density similarity measure.
 4.  **Knots segmentation** : Use linkage criterion to segment knots into $S$ groups based on the edge weights.
 5.  **Assignment of labels** : Assign a cluster label to each observation based on which knot group the nearest knot belongs to.
-
-
 
 ## Knot construction
 
@@ -106,16 +141,11 @@ grid.arrange(gg1,gg2,ncol=2)
 
 ```
 
-
 ## Edge construction
 
 Let $c_1,c_2,\ldots,c_k$ be the given knots and we use $\mathcal{C}=\left\{c_1,c_2,\ldots,c_k\right\}$ to denote their collection of them.
 
-
-
 -   The Voronoi cell, or Voronoi region, $\mathbb{C}_j$ associated with a knot $c_j$ is the set of all points in $\mathcal{X}$ whose distance to $c_j$ is the smallest compared to other knots. That is, $\mathbb{C}_j=\left\{ \boldsymbol{x}\in\mathcal{X}:d\left(\boldsymbol{x},c_j\right)\leq d\left(\boldsymbol{x},c_\ell\right)\forall \ell\neq j\right\}$ where $d\left(\boldsymbol{x},\boldsymbol{y}\right)$ is the usual Euclidean distance.
-
-
 
 ## Edge Construction
 
@@ -138,6 +168,7 @@ data=data.frame("X_1"=df$data[,1],"X_2"=df$data[,2])
 
 
 ```
+
 ```{r warning=FALSE, out.height="80%", fig.asp = 2, fig.align = 'center'}
 skeleton = skeletonCons(data, rep = 1000, k = 20)
 
@@ -153,7 +184,7 @@ ggplot(as.data.frame(skeleton$centers), aes(X_1,X_2)) + stat_voronoi(geom = "pat
 
 -   But in case of high dimensional data, it becomes computationally expensive. Therefore, in practice we approximate the exact Delaunay Triangulation with $\widehat{DT}\left(\mathcal{C}\right)$ by examining the 2-nearest knots of the sample data points.
 
-## Edge Construction 
+## Edge Construction
 
 ```{r include = F}
 library(ggplot2)
@@ -193,7 +224,6 @@ ggplot(as.data.frame(skeleton$centers), aes(X_1,X_2)) + stat_voronoi(geom = "pat
 
 -   The estimations of the newly proposed similarity measures are reliable even under high-dimensional settings.
 
-
 ## Knot Segmentation.
 
 Given the weighted skeleton graph, the next step is to partition the knots into the desired number of final clusters.
@@ -201,7 +231,6 @@ Given the weighted skeleton graph, the next step is to partition the knots into 
 -   For given similarity measures $\left\{s_{ij}\right\}_{i\neq j}$ where only connected pairs can take nonzero entries and let $s_{max}=\underset{i\neq j}{\max}s_{ij}$ , we define the corresponding distances as $d_{ij}=0$ if $i=j$ and $d_{ij}=s_{max}-s_{ij}$ otherwise.
 
 -   After that, we perform a hierarchical clustering. The choice of the linkage criterion may depend on the underlying geometric structure of the data. In practice, such choice of linkage should be made based on some exploratory understanding of the data structure.
-
 
 ## Knot Segmentation
 
@@ -230,7 +259,7 @@ ggplot(data = cbind(data, X_lab_VD)) + geom_point(aes(X_1, X_2), col = X_lab_VD)
 
 ```
 
-## How to choose the final number of Clusters ? 
+## How to choose the final number of Clusters ?
 
 -   The number of final clusters $S$ is an essential parameter for the hierarchical clustering procedure but can be unknown.
 
@@ -247,7 +276,6 @@ ggplot(data = cbind(data, X_lab_VD)) + geom_point(aes(X_1, X_2), col = X_lab_VD)
     -   $$ A_{j\ell}=\left\{\boldsymbol{x}\in \mathcal{X}:d\left(\boldsymbol{x},c_i\right)>\max\left\{d\left(\boldsymbol{x},c_i\right),d\left(\boldsymbol{x},c_\ell\right)\right\}\forall i\neq j,\ell\right\} $$
 
 -   Following the idea of density-based clustering, two knots $c_j,c_\ell$ belong to the same clusters if they are in a connected high-density region, and we would expect the $2$-NN region of $c_j,c_\ell$ to have a high probability measure. Hence $\mathbb{P}\left(A_{j\ell}\right)$ can measure the association between the knots.
-
 
 ## Voronoi Density
 
@@ -275,10 +303,10 @@ We start with the convergence rate of the VD. We consider the following conditio
 
 where $\left(j,\ell\right)\in E$ means that there is an edge between knots $c_j$ and $c_\ell$ in the Delaunay Triangulation. The above condition is a condition requiring that no Voronoi cell $A_{j\ell}$ has a particularly small size and all edges have sufficient length.
 
-### Theorem (Voronoi Density Convergence)
+## Voronoi Density Convergence
 
-Under the assumption of the above condition, for any pair $j\neq\ell$ that
-shares an edge, the similarity measure based on the Voronoi density satisfies,
+### Theorem: 
+Under the assumption of the above condition, for any pair $j\neq\ell$ that shares an edge, the similarity measure based on the Voronoi density satisfies,
 
 $$
 \left|\frac{\hat{S}^{VD}_{j\ell}}{S^{VD}_{j\ell}}-1\right|=\mathcal{O}_{\mathbb{P}}\left(\sqrt{\frac{k}{n}}\right)
