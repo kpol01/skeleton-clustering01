@@ -259,4 +259,33 @@ ggplot(data = cbind(data, X_lab_VD)) + geom_point(aes(X_1, X_2), col = X_lab_VD)
 
     -   $$ \hat{S}^{VD}_{j\ell}=\frac{\hat{\mathbb{P}}\left(A_{j\ell}\right)}{\left\lVert c_j-c_\ell\right\rVert}  $$
 
+## Asymptotic theory of Edge weight estimation.
 
+We assume the set of knots $\mathcal{C}=\left\{c_1,\ldots,c_k\right\}$ is given and non-random to simplify the analysis because
+
+-   It is hard to quantify $k$-means uncertainty
+
+-   with large $k$, it's extremely likely for $k$-means to stuck within the local minimum.
+
+### Voronoi Density consistency
+
+We start with the convergence rate of the VD. We consider the following condition :
+
+-   There exists a constant $c_0$ such that the minimal knot size $\min_{\left(j,\ell\right)\in E}\mathbb{P}\left(A_{j\ell}\right)\geq \frac{c_0}{k}$ and $\min_{\left(j,\ell\right)\in E}\left\lVert A_{j\ell}\right\rVert\geq \frac{c_0}{k^{\frac{1}{d}}}$
+
+where $\left(j,\ell\right)\in E$ means that there is an edge between knots $c_j$ and $c_\ell$ in the Delaunay Triangulation. The above condition is a condition requiring that no Voronoi cell $A_{j\ell}$ has a particularly small size and all edges have sufficient length.
+
+### Theorem (Voronoi Density Convergence)
+
+Under the assumption of the above condition, for any pair $j\neq\ell$ that
+shares an edge, the similarity measure based on the Voronoi density satisfies,
+
+$$
+\left|\frac{\hat{S}^{VD}_{j\ell}}{S^{VD}_{j\ell}}-1\right|=\mathcal{O}_{\mathbb{P}}\left(\sqrt{\frac{k}{n}}\right)
+$$
+
+$$
+\underset{j,\ell}{\max}\left|\frac{\hat{S}^{VD}_{j\ell}}{S^{VD}_{j\ell}}-1\right|=\mathcal{O}_{\mathbb{P}}\left(\sqrt{\frac{k}{n}}\ln{k}\right)
+$$
+
+when $n\rightarrow\infty,k\rightarrow\infty,\frac{n}{k}\rightarrow\infty$
