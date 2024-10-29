@@ -26,8 +26,8 @@ knitr::opts_chunk$set(echo = FALSE)
     -   Problem with non-convex clusters persists.
     -   If any pair of the points in two different clusters lie very close to each other, the two clusters may get merged in this method.
 
-
 ## The YinYang Data
+
 ```{r, out.height="80%", fig.align="center"}
 set.seed(seed=1234)
 Yinyang_data = function(n_m=400,n_c=200,n_r=2000,sd_c=0.1,sd_r=0.1, d=2, sd_high=0.1){
@@ -61,7 +61,27 @@ data=as.data.frame(Yinyang_data())
 ggplot(data = data) + geom_point(aes(x = data.x, y = data.y))
 ```
 
+## Result of k-means Clustering
 
+```{r out.height="80%", fig.align="center"}
+kmean <- kmeans(data, centers = 5)
+centers <- kmean$cluster
+
+ggplot(data = cbind(data, centers)) + geom_point(aes(data.x, data.y), col = centers)
+```
+
+## Result of Hierarchical Clustering
+
+```{r out.height="80%", fig.align="center"}
+library(cluster)
+datac=as.data.frame(Yinyang_data()$data)
+noise <- matrix(rnorm(3200*98), nrow = 3200)
+datac <- cbind(datac, noise)
+clust <- agnes(datac, method = "single")
+groups <- cutree(clust, k=5)
+
+ggplot(data = cbind(datac, groups)) + geom_point(aes(x, y), col = groups)
+```
 
 ## Skeleton Clustering Framework.
 
@@ -255,7 +275,7 @@ X_lab_VD = VD_lab[skeleton$cluster]
 
 ggplot(data = cbind(data, X_lab_VD)) + geom_point(aes(X_1, X_2), col = X_lab_VD, size = 4)
 
-ggplot(data = cbind(data, X_lab_VD)) + geom_point(aes(X_1, X_2), col = X_lab_VD)
+#ggplot(data = cbind(data, X_lab_VD)) + geom_point(aes(X_1, X_2), col = X_lab_VD)
 
 ```
 
@@ -287,6 +307,62 @@ ggplot(data = cbind(data, X_lab_VD)) + geom_point(aes(X_1, X_2), col = X_lab_VD)
 
     -   $$ \hat{S}^{VD}_{j\ell}=\frac{\hat{\mathbb{P}}\left(A_{j\ell}\right)}{\left\lVert c_j-c_\ell\right\rVert}  $$
 
+## Final Result Using Skeleton Clustering
+
+```{r out.height="80%", fig.align="center"}
+df=Yinyang_data()
+data=data.frame("X_1"=df$data[,1],"X_2"=df$data[,2])
+
+skeleton = skeletonCons(data, rep = 1000, k = floor(sqrt(3200)))
+
+knots <- as.data.frame(skeleton$centers)
+points <- data.frame(x = knots$X_1, y = knots$X_2)
+deldir_output <- deldir(points$x, points$y)
+
+# Extract Voronoi and Delaunay edges
+voronoi_edges <- deldir_output$dirsgs
+delaunay_edges <- deldir_output$delsgs
+
+# Convert to data frames suitable for ggplot2
+voronoi_df <- data.frame(x = c(voronoi_edges$x1, voronoi_edges$x2),
+                         y = c(voronoi_edges$y1, voronoi_edges$y2),
+                         group = rep(1:nrow(voronoi_edges), each = 2))
+
+delaunay_df <- data.frame(x = c(delaunay_edges$x1, delaunay_edges$x2),
+                          y = c(delaunay_edges$y1, delaunay_edges$y2),
+                          group = rep(1:nrow(delaunay_edges), each = 2))
+
+
+ggplot(as.data.frame(skeleton$centers), aes(X_1,X_2)) + stat_voronoi(geom = "path", lty = 2, col = "blue") +geom_point(data = data, col = 'darkgrey') + 
+  geom_point(data = as.data.frame(skeleton$centers), col = 'red', size = 2) +
+  geom_segment(data = delaunay_edges, aes(x = x1, y = y1, xend = x2, yend = y2))
+```
+
+## Final Result Using Skeleton Clustering
+
+```{r out.height="80%", fig.align="center"}
+VD_tmp = max(skeleton$voron_weights) - skeleton$voron_weights 
+diag(VD_tmp) = 0
+VD_tmp = as.dist(VD_tmp)
+
+VD_hclust = hclust(VD_tmp, method="single")
+
+clust <- agnes(knots, method = "single")
+groups <- cutree(clust, k=5)
+
+df1 <- cbind(knots, groups)
+#df1 <- cbind(, groups)
+#ggplot(knots, aes(X_1,X_2)) + stat_voronoi(geom = "path", lty = 4, col = "blue") +geom_point(data = data, col = 'darkgrey') + 
+  #geom_point(data = knots, col = 'red', size = 4)
+
+VD_lab = cutree(VD_hclust, k=5)
+X_lab_VD = VD_lab[skeleton$cluster]
+#plot(data[,1], data[,2], col = X_lab_VD, main = "Skeleton Clustering with Voronoi Density", xlab = "X", ylab = "Y", cex.main=1.5)
+
+ggplot(data = cbind(data, X_lab_VD)) + geom_point(aes(X_1, X_2), col = X_lab_VD)
+
+```
+
 ## Asymptotic theory of Edge weight estimation.
 
 We assume the set of knots $\mathcal{C}=\left\{c_1,\ldots,c_k\right\}$ is given and non-random to simplify the analysis because
@@ -305,7 +381,8 @@ where $\left(j,\ell\right)\in E$ means that there is an edge between knots $c_j$
 
 ## Voronoi Density Convergence
 
-### Theorem: 
+### Theorem:
+
 Under the assumption of the above condition, for any pair $j\neq\ell$ that shares an edge, the similarity measure based on the Voronoi density satisfies,
 
 $$
@@ -322,16 +399,10 @@ when $n\rightarrow\infty,k\rightarrow\infty,\frac{n}{k}\rightarrow\infty$
 
 -   Zeyu Wei, Yen-Chi Chen, "Skeleton Clustering : Dimension Free Density-Aided Clustering", 2023.
 
--   J.-P. Baudry, A. E. Raftery, G. Celeux, K. Lo, and R. Gottardo. Combining
-    mixture components for clustering. Journal of Computational and Graphical
-    Statistics, 19(2):332–353, 2010. doi: 10.1198/jcgs.2010.08111.
+-   J.-P. Baudry, A. E. Raftery, G. Celeux, K. Lo, and R. Gottardo. Combining mixture components for clustering. Journal of Computational and Graphical Statistics, 19(2):332--353, 2010. doi: 10.1198/jcgs.2010.08111.
 
--   A. L. N. Fred and A. K. Jain. Combining multiple clusterings using evidence
-    accumulation. IEEE Transactions on Pattern Analysis and Machine Intelligence,
-    27(6):835–850, 2005. doi: 10.1109/TPAMI.2005.113.
+-   A. L. N. Fred and A. K. Jain. Combining multiple clusterings using evidence accumulation. IEEE Transactions on Pattern Analysis and Machine Intelligence, 27(6):835--850, 2005. doi: 10.1109/TPAMI.2005.113.
 
--   R. Maitra. Initializing partition-optimization algorithms. IEEE/ACM Transactions
-    on Computational Biology and Bioinformatics, 6(1):144–157, 2009. doi:
-    10.1109/TCBB.2007.70244.
+-   R. Maitra. Initializing partition-optimization algorithms. IEEE/ACM Transactions on Computational Biology and Bioinformatics, 6(1):144--157, 2009. doi: 10.1109/TCBB.2007.70244.
 
-# Thanks for listening! :)
+## Thanks for listening! :)
