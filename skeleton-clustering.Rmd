@@ -46,7 +46,7 @@ knitr::opts_chunk$set(echo = FALSE)
 
 ## Knot Construction
 
-```{r,echo=FALSE, fig.height = 5.5}
+```{r,echo=FALSE, out.height="80%", fig.asp = 1, fig.align = 'center'}
 #' Generating Yinyang data
 #'
 #' @param n_m number of points in each of the two moon shapes. Positive integer value or vector with length=2
@@ -206,6 +206,6 @@ VD_lab = cutree(VD_hclust, k=2)
 X_lab_VD = VD_lab[skeleton$cluster]
 
 
-ggplot(data = cbind(data, X_lab_VD)) + geom_point(aes(X_1, X_2), col = X_lab_VD)
+ggplot(data = cbind(data, X_lab_VD)) + geom_point(aes(X_1, X_2), col = X_lab_VD, size = 4)
 ```
 
