@@ -12,6 +12,9 @@ output:
 ```{r setup, include=FALSE, comment=NA}
 knitr::opts_chunk$set(echo = FALSE)
 ```
+## Traditional Clustering Methods
+
+
 
 ## Skeleton Clustering Framework.
 
@@ -26,7 +29,7 @@ knitr::opts_chunk$set(echo = FALSE)
 ## Knot construction
 
 -   Some knots are constructed to give a concise representation of the data structure.
--   In practice we use $k$-Means to choose $k=\left\lfloorsqrt{n}\right\rfloor$ knots, where $n$ is the number of samples.
+-   In practice we use $k$-Means to choose $k=\left\lfloor\sqrt{n}\right\rfloor$ knots, where $n$ is the number of samples.
 -   Empirically robustness performance with sufficient number of knots.
 
 ```{r}
