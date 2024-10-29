@@ -44,6 +44,61 @@ knitr::opts_chunk$set(echo = FALSE)
 -   In practice we use $k$-Means to choose $k=\left\lfloor\sqrt{n}\right\rfloor$ knots, where $n$ is the number of samples.
 -   Empirically robustness performance with sufficient number of knots.
 
-```{r}
+```{r,echo=FALSE}
+#' Generating Yinyang data
+#'
+#' @param n_m number of points in each of the two moon shapes. Positive integer value or vector with length=2
+#' @param n_c number of points in each of the two small circles
+#' @param n_r number of points in the outer ring
+#' @param sd_c the standard deviation of shifts for points in the two small circles
+#' @param sd_r the standard deviation of shifts for points in the outer ring
+#' @param d a number indicating the dimension of the generated data. d>2 dimensions are filled with independent Gaussian noises
+#' @param sd_high a number indicating the standard deviation for Gaussian noises in the higher dimensions
+#' @return A list of generated data points and the true labels
+#' \itemize{
+#'   \item data - The generated data matrix
+#'   \item clus - The vector of true cluster labels for each data point
+#' }
+#' @export
+#' @examples
+#' X = Yinyang_data()$data
+#' plot(X[,1], X[,2])
+Yinyang_data = function(n_m=400,n_c=200,n_r=2000,sd_c=0.1,sd_r=0.1, d=2, sd_high=0.1){
+  X_m = clusterSim::shapes.two.moon(n_m)
+  
+  x1 = cbind(stats::rnorm(n_c, mean= 0.5, sd=sd_c), stats::rnorm(n_c, mean= -1.5, sd=sd_c))
+  x2 = cbind(stats::rnorm(n_c, mean= -1, sd=sd_c), stats::rnorm(n_c, mean= 0.5, sd=sd_c))
+  
+  th = stats::runif(n_r,0,2*pi)
+  x  = 2.5*cos(th) - 0.25
+  y  = 2.5*sin(th) -0.5
+  x3  = cbind(x,y) + matrix(stats::rnorm(2*length(x), sd=sd_r), ncol=2)
+  
+  X = rbind(X_m$data, x1, x2, x3)
+  
+  if(d==2){
+    X0 = X
+  }
+  if(d>2){
+    n = nrow(X)
+    d_add = d-2
+    X0 = cbind(X, matrix(stats::rnorm(d_add*(n),  sd = sd_high), nrow = n))
+  }
+  Y0 = c(X_m$clusters, rep(3,n_c), rep(4,n_c), rep(5,n_r))
+  return(list(data = X0, clus = Y0))
+}
+
+library(ggplot2)
+library(gridExtra)
+library(latex2exp)
+df=Yinyang_data(n_c = 0,n_r = 0)
+gg1=ggplot(data=data.frame("X_1"=df$data[,1],"X_2"=df$data[,2]),aes(x=X_1,y=X_2))+
+  geom_point()+labs(x=TeX("$\\X_1$"),y=TeX("$\\X_2$"))
+df_km=kmeans(df$data,centers=20)
+gg2=ggplot(data=data.frame("X_1"=df$data[,1],"X_2"=df$data[,2]),aes(x=X_1,y=X_2))+
+  geom_point(col="darkgrey")+labs(x=TeX("$\\X_1$"),y=TeX("$\\X_2$"))+
+  geom_point(data=data.frame("X"=df_km$centers[,1],"Y"=df_km$centers[,2]),aes(x=X,y=Y),col="red",size=2)+
+  geom_text(data=data.frame("X"=df_km$centers[,1],"Y"=df_km$centers[,2],"l"=1:20),aes(x=X,y=Y,label=l,hjust=-0.1,vjust=-0.5))
+grid.arrange(gg1,gg2,ncol=2)
 
 ```
