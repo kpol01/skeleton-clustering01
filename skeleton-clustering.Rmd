@@ -1,0 +1,18 @@
+---
+title: "Skeleton Clustering : A Dimension free Density-Aided Clustering"
+author: "| Kaustav Paul\n| Sourav Biswas \n"
+institute: "Indian Statistical Institute, Kolkata"
+date: "`r Sys.Date()`"
+output: 
+  beamer_presentation:
+    theme: "AnnArbor"
+    colortheme: "beaver"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+## Skeleton Clustering Framework
+
+**Input :** Observations $X_1,X_2,\ldots,X_n$ final number of clusters $S$
