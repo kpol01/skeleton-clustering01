@@ -222,13 +222,12 @@ ggdendrogram(VD_hclust, rotate = T)
 ```{r warning=FALSE, out.height="80%", fig.asp = 2, fig.align = 'center'}
 VD_lab = cutree(VD_hclust, k=2)
 X_lab_VD = VD_lab[skeleton$cluster]
-<<<<<<< HEAD
 
 
 ggplot(data = cbind(data, X_lab_VD)) + geom_point(aes(X_1, X_2), col = X_lab_VD, size = 4)
-=======
+
 ggplot(data = cbind(data, X_lab_VD)) + geom_point(aes(X_1, X_2), col = X_lab_VD)
->>>>>>> 0c33b9f8d10e5be49c04532346f585d2b6549cdb
+
 ```
 
 ## How to choose the final number of Clusters ? 
@@ -249,6 +248,9 @@ ggplot(data = cbind(data, X_lab_VD)) + geom_point(aes(X_1, X_2), col = X_lab_VD)
 
 -   Following the idea of density-based clustering, two knots $c_j,c_\ell$ belong to the same clusters if they are in a connected high-density region, and we would expect the $2$-NN region of $c_j,c_\ell$ to have a high probability measure. Hence $\mathbb{P}\left(A_{j\ell}\right)$ can measure the association between the knots.
 
+
+## Voronoi Density
+
 -   Based on this insight, the Voronoi density measures the edge weight of $\left(c_j,c_\ell\right)$ with,
 
     -   $$ S^{VD}_{j\ell}=\frac{\mathbb{P}\left(A_{j\ell}\right)}{\left\lVert c_j-c_\ell\right\rVert} $$
@@ -256,7 +258,5 @@ ggplot(data = cbind(data, X_lab_VD)) + geom_point(aes(X_1, X_2), col = X_lab_VD)
 -   In practice, we estimate $S^{VD}_{j\ell}$ by a sample average. Specifically, the numerator $\mathbb{P}\left(A_{j\ell}\right)$ is estimated by $\hat{\mathbb{P}}_n\left(A_{j\ell}\right)=\frac{1}{n}\sum_{i=1}^n \boldsymbol{1}\left(\boldsymbol{X_i}\in A_{j\ell}\right)$ and the final estimator for VD is,
 
     -   $$ \hat{S}^{VD}_{j\ell}=\frac{\hat{\mathbb{P}}\left(A_{j\ell}\right)}{\left\lVert c_j-c_\ell\right\rVert}  $$
-
-## Face and Tube Density
 
 
