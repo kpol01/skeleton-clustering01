@@ -65,6 +65,7 @@ knitr::opts_chunk$set(echo = FALSE)
 #' @examples
 #' X = Yinyang_data()$data
 #' plot(X[,1], X[,2])
+set.seed(seed=1234)
 Yinyang_data = function(n_m=400,n_c=200,n_r=2000,sd_c=0.1,sd_r=0.1, d=2, sd_high=0.1){
   X_m = clusterSim::shapes.two.moon(n_m)
   
@@ -151,4 +152,60 @@ ggplot(as.data.frame(skeleton$centers), aes(X_1,X_2)) + stat_voronoi(geom = "pat
 -   Such resulting graph is the Delaunay Triangulation of the set of knots $\mathcal{C}$ and we denote is as $DT\left(\mathcal{C}\right)$.
 
 -   But in case of high dimensional data, it becomes computationally expensive. Therefore, in practice we approximate the exact Delaunay Triangulation with $\widehat{DT}\left(\mathcal{C}\right)$ by examining the 2-nearest knots of the sample data points.
+
+## Edge Construction 
+
+```{r include = F}
+library(ggplot2)
+library(ggforce)
+library(deldir)
+
+set.seed(123)
+knots <- as.data.frame(skeleton$centers)
+points <- data.frame(x = knots$X_1, y = knots$X_2)
+deldir_output <- deldir(points$x, points$y)
+# Extract Voronoi and Delaunay edges
+voronoi_edges <- deldir_output$dirsgs
+delaunay_edges <- deldir_output$delsgs
+
+# Convert to data frames suitable for ggplot2
+voronoi_df <- data.frame(x = c(voronoi_edges$x1, voronoi_edges$x2),
+                         y = c(voronoi_edges$y1, voronoi_edges$y2),
+                         group = rep(1:nrow(voronoi_edges), each = 2))
+
+delaunay_df <- data.frame(x = c(delaunay_edges$x1, delaunay_edges$x2),
+                          y = c(delaunay_edges$y1, delaunay_edges$y2),
+                          group = rep(1:nrow(delaunay_edges), each = 2))
+
+```
+
+```{r warning=FALSE, out.height="80%", fig.asp = 2, fig.align = 'center'}
+ggplot(as.data.frame(skeleton$centers), aes(X_1,X_2)) + stat_voronoi(geom = "path", lty = 4, col = "blue") +geom_point(data = data, col = 'darkgrey') + 
+  geom_point(data = as.data.frame(skeleton$centers), col = 'red', size = 8) +
+  geom_segment(data = delaunay_edges, aes(x = x1, y = y1, xend = x2, yend = y2))
+```
+
+## Knot Segmentation
+
+```{r}
+VD_tmp = max(skeleton$voron_weights) - skeleton$voron_weights 
+diag(VD_tmp) = 0
+VD_tmp = as.dist(VD_tmp)
+
+##perform hierarchical clustering on the distance matrix
+VD_hclust = hclust(VD_tmp, method="single")
+
+library(ggdendro)
+ggdendrogram(VD_hclust, rotate = T)
+```
+
+## Final Clustering Result
+
+```{r warning=FALSE, out.height="80%", fig.asp = 2, fig.align = 'center'}
+VD_lab = cutree(VD_hclust, k=2)
+X_lab_VD = VD_lab[skeleton$cluster]
+
+
+ggplot(data = cbind(data, X_lab_VD)) + geom_point(aes(X_1, X_2), col = X_lab_VD)
+```
 
