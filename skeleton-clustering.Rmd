@@ -185,6 +185,24 @@ ggplot(as.data.frame(skeleton$centers), aes(X_1,X_2)) + stat_voronoi(geom = "pat
   geom_segment(data = delaunay_edges, aes(x = x1, y = y1, xend = x2, yend = y2))
 ```
 
+## Edge Weight Construction.
+
+-   Given the constructed edges and knots, we assign each edge a weight that represents the similarity between the pair of knots.
+
+-   We propose a density aided quantity as edge weights.
+
+-   The estimations of the newly proposed similarity measures are reliable even under high-dimensional settings.
+
+
+## Knot Segmentation.
+
+Given the weighted skeleton graph, the next step is to partition the knots into the desired number of final clusters.
+
+-   For given similarity measures $\left\{s_{ij}\right\}_{i\neq j}$ where only connected pairs can take nonzero entries and let $s_{max}=\underset{i\neq j}{\max}s_{ij}$ , we define the corresponding distances as $d_{ij}=0$ if $i=j$ and $d_{ij}=s_{max}-s_{ij}$ otherwise.
+
+-   After that, we perform a hierarchical clustering. The choice of the linkage criterion may depend on the underlying geometric structure of the data. In practice, such choice of linkage should be made based on some exploratory understanding of the data structure.
+
+
 ## Knot Segmentation
 
 ```{r}
@@ -204,8 +222,35 @@ ggdendrogram(VD_hclust, rotate = T)
 ```{r warning=FALSE, out.height="80%", fig.asp = 2, fig.align = 'center'}
 VD_lab = cutree(VD_hclust, k=2)
 X_lab_VD = VD_lab[skeleton$cluster]
-
-
 ggplot(data = cbind(data, X_lab_VD)) + geom_point(aes(X_1, X_2), col = X_lab_VD)
 ```
+
+## How to choose the final number of Clusters ? 
+
+-   The number of final clusters $S$ is an essential parameter for the hierarchical clustering procedure but can be unknown.
+
+-   An inferential choice can also be made using the gap statistics, Calinski-Harabascz index etc.
+
+## Some feasible density functions
+
+### Voronoi Density (VD).
+
+-   The Voronoi density (VD) measures the similarity between a pair of knots $\left(c_j,c_\ell\right)$ based on the number of observations whose $2$-nearest knots are $c_j$ and $c_\ell$.
+
+-   Given a metric $d$ on $\mathbb{R}^d$, the $2$-Nearest-Neighbor ($2$-NN) region of a pair of knots $\left(c_j,c_\ell\right)$ is defined as,
+
+    -   $$ A_{j\ell}=\left\{\boldsymbol{x}\in \mathcal{X}:d\left(\boldsymbol{x},c_i\right)>\max\left\{d\left(\boldsymbol{x},c_i\right),d\left(\boldsymbol{x},c_\ell\right)\right\}\forall i\neq j,\ell\right\} $$
+
+-   Following the idea of density-based clustering, two knots $c_j,c_\ell$ belong to the same clusters if they are in a connected high-density region, and we would expect the $2$-NN region of $c_j,c_\ell$ to have a high probability measure. Hence $\mathbb{P}\left(A_{j\ell}\right)$ can measure the association between the knots.
+
+-   Based on this insight, the Voronoi density measures the edge weight of $\left(c_j,c_\ell\right)$ with,
+
+    -   $$ S^{VD}_{j\ell}=\frac{\mathbb{P}\left(A_{j\ell}\right)}{\left\lVert c_j-c_\ell\right\rVert} $$
+
+-   In practice, we estimate $S^{VD}_{j\ell}$ by a sample average. Specifically, the numerator $\mathbb{P}\left(A_{j\ell}\right)$ is estimated by $\hat{\mathbb{P}}_n\left(A_{j\ell}\right)=\frac{1}{n}\sum_{i=1}^n \boldsymbol{1}\left(\boldsymbol{X_i}\in A_{j\ell}\right)$ and the final estimator for VD is,
+
+    -   $$ \hat{S}^{VD}_{j\ell}=\frac{\hat{\mathbb{P}}\left(A_{j\ell}\right)}{\left\lVert c_j-c_\ell\right\rVert}  $$
+
+## Face and Tube Density
+
 
