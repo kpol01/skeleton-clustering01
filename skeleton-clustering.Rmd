@@ -289,3 +289,21 @@ $$
 $$
 
 when $n\rightarrow\infty,k\rightarrow\infty,\frac{n}{k}\rightarrow\infty$
+
+## References
+
+-   Zeyu Wei, Yen-Chi Chen, "Skeleton Clustering : Dimension Free Density-Aided Clustering", 2023.
+
+-   J.-P. Baudry, A. E. Raftery, G. Celeux, K. Lo, and R. Gottardo. Combining
+    mixture components for clustering. Journal of Computational and Graphical
+    Statistics, 19(2):332–353, 2010. doi: 10.1198/jcgs.2010.08111.
+
+-   A. L. N. Fred and A. K. Jain. Combining multiple clusterings using evidence
+    accumulation. IEEE Transactions on Pattern Analysis and Machine Intelligence,
+    27(6):835–850, 2005. doi: 10.1109/TPAMI.2005.113.
+
+-   R. Maitra. Initializing partition-optimization algorithms. IEEE/ACM Transactions
+    on Computational Biology and Bioinformatics, 6(1):144–157, 2009. doi:
+    10.1109/TCBB.2007.70244.
+
+# Thanks for listening! :)
