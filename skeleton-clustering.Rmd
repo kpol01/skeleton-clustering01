@@ -9,10 +9,37 @@ output:
     colortheme: "beaver"
 ---
 
-```{r setup, include=FALSE}
+```{r setup, include=FALSE, comment=NA}
 knitr::opts_chunk$set(echo = FALSE)
 ```
 
-## Skeleton Clustering Framework
+## Skeleton Clustering Framework.
 
-**Input :** Observations $X_1,X_2,\ldots,X_n$ final number of clusters $S$
+**Input :** Observations $X_1,X_2,\ldots,X_N$, final number of clusters $S$.
+
+1.  **Knot construction** : Perform $k-$means clustering with a large number $k$; the centers are the knots.
+2.  **Edge construction** : Apply approximate Delaunay triangulation to the knots. Generally we choose $k=\left\lfloor\sqrt{n}\right\rfloor$
+3.  **Edge weights construction** : Add weights to each edge using either Voronoi density, Face density or Tube density similarity measure.
+4.  **Knots segmentation** : Use linkage criterion to segment knots into $S$ groups based on the edge weights.
+5.  **Assignment of labels** : Assign a cluster label to each observation based on which knot group the nearest knot belongs to.
+
+## Knot construction
+
+-   Some knots are constructed to give a concise representation of the data structure.
+-   In practice we use $k$-Means to choose $k=\left\lfloorsqrt{n}\right\rfloor$ knots, where $n$ is the number of samples.
+-   Empirically robustness performance with sufficient number of knots.
+
+```{r}
+
+```
+
+
+
+
+
+
+
+
+
+
+
