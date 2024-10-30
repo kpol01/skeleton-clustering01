@@ -310,10 +310,11 @@ ggplot(data = cbind(data, X_lab_VD)) + geom_point(aes(X_1, X_2), col = X_lab_VD,
 ## Final Result Using Skeleton Clustering
 
 ```{r out.height="80%", fig.align="center"}
-df=Yinyang_data()
-data=data.frame("X_1"=df$data[,1],"X_2"=df$data[,2])
+library(skeletonClus)
+df=as.data.frame(Yinyang1000$data)
+data=data.frame("X_1"=df[,1],"X_2"=df[,2])
 
-skeleton = skeletonCons(data, rep = 1000, k = floor(sqrt(3200)))
+skeleton = skeletonCons(data, rep = 1000, k = floor(sqrt(nrow(df))))
 
 knots <- as.data.frame(skeleton$centers)
 points <- data.frame(x = knots$X_1, y = knots$X_2)
