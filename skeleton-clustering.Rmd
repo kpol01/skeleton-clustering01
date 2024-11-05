@@ -1,12 +1,14 @@
 ---
 title: "Skeleton Clustering : A Dimension free Density-Aided Clustering"
 author: "| Kaustav Paul\n| Sourav Biswas \n"
-institute: "Indian Statistical Institute, Kolkata"
-date: "November 06, 2024"
+institute: "| \\includegraphics[height=1cm]{images/isilogo.png}\n Indian Statistical Institute, Kolkata"
+date: "6th November, 2024"
 output: 
   beamer_presentation:
     theme: "AnnArbor"
     colortheme: "beaver"
+    includes:
+      in_header: custom-footer.tex
 ---
 
 ```{r setup, include=FALSE, comment=NA}
