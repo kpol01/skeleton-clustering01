@@ -24,8 +24,7 @@ knitr::opts_chunk$set(echo = FALSE)
     -   The rate of convergence for the density estimates is $\mathcal{O}_\mathbb{P}(n^{-\frac{4}{d+4}})$
 -   **Hierarchical Clustering:**
     -   In high dimensional problems it may tend to include all points in a single cluster. 
-    -   If any pair of the points in two different clusters lie very close to each other, the two clusters may get merged in this method.
-
+    
 ## The YinYang Data
 
 We consider a 100 dimensional data where the first two dimensions have the following structure. The rest 98 are random noise from $N(0,1)$.
@@ -66,7 +65,7 @@ ggplot(data = data) + geom_point(aes(x = data.x, y = data.y))
 ## Result of k-means Clustering
 
 ```{r out.height="80%", fig.align="center"}
-kmean <- kmeans(data, centers = 5, algorithm = "Lloyd")
+kmean <- kmeans(data, centers = 5, algorithm = "Lloyd", iter.max = 50)
 centers <- kmean$cluster
 
 ggplot(data = cbind(data, centers)) + geom_point(aes(data.x, data.y), col = centers)
