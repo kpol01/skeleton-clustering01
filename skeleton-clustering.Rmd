@@ -203,9 +203,9 @@ ggplot(as.data.frame(skeleton$centers), aes(X_1,X_2)) + stat_voronoi(geom = "pat
 
 -   Such resulting graph is the **Delaunay Triangulation** of the set of knots $\mathcal{C}$ and we denote is as $DT\left(\mathcal{C}\right)$.
 
-    ![](images/Screenshot 2024-11-05 193746.png){width="95"}
-
 -   But in case of high dimensional data, it becomes computationally expensive. Therefore, in practice we approximate the exact Delaunay Triangulation with $\widehat{DT}\left(\mathcal{C}\right)$ by examining the 2-nearest knots of the sample data points.
+
+-   If the voronoi cells of two knots $c_i, c_j$ share a non-trivial boundary, there is likely to be a non-empty region of points whose 2-nearest knots are $c_i, c_j$.
 
 ## Edge Construction
 
