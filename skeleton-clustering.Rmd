@@ -294,9 +294,9 @@ ggplot(data = cbind(data, X_lab_VD)) + geom_point(aes(X_1, X_2), col = X_lab_VD,
 
 ### Voronoi Density (VD).
 
--   The Voronoi density (VD) measures the similarity between a pair of knots $\left(c_j,c_\ell\right)$ based on the number of observations whose $2$-nearest knots are $c_j$ and $c_\ell$.
+-   The **Voronoi density (VD)** measures the similarity between a pair of knots $\left(c_j,c_\ell\right)$ based on the number of observations whose $2$-nearest knots are $c_j$ and $c_\ell$.
 
--   Given a metric $d$ on $\mathbb{R}^d$, the $2$-Nearest-Neighbor ($2$-NN) region of a pair of knots $\left(c_j,c_\ell\right)$ is defined as,
+-   Given a metric $d$ on $\mathbb{R}^d$, the **$2$-Nearest-Neighbor** ($2$-NN) region of a pair of knots $\left(c_j,c_\ell\right)$ is defined as,
 
     -   $$ A_{j\ell}=\left\{\boldsymbol{x}\in \mathcal{X}:d\left(\boldsymbol{x},c_i\right)>\max\left\{d\left(\boldsymbol{x},c_j\right),d\left(\boldsymbol{x},c_\ell\right)\right\}\forall i\neq j,\ell\right\} $$
 
