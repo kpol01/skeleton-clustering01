@@ -23,8 +23,8 @@ knitr::opts_chunk$set(echo = FALSE)
     -   To estimate the underlying PDF and detect clusters based on the PDF.
     -   The rate of convergence for the density estimates is $\mathcal{O}_\mathbb{P}(n^{-\frac{4}{d+4}})$
 -   **Hierarchical Clustering:**
-    -   In high dimensional problems it may tend to include all points in a single cluster. 
-    
+    -   In high dimensional problems it may tend to include all points in a single cluster.
+
 ## The YinYang Data
 
 We consider a 100 dimensional data where the first two dimensions have the following structure. The rest 98 are random noise from $N(0,1)$.
@@ -96,8 +96,8 @@ ggplot(data = cbind(datac, groups)) + geom_point(aes(x, y), col = groups)
 
 ## Knot construction
 
--   Some knots are constructed to give a concise representation of the data structure. One can use $k$-means algorithm to get such a representation. 
-- It is suggested to choose $k>>>S$, where $S$ is the final number of clusters.  In practice we use  $k=\left\lfloor\sqrt{n}\right\rfloor$, where $n$ is the number of samples.
+-   Some knots are constructed to give a concise representation of the data structure. One can use $k$-means algorithm to get such a representation.
+-   It is suggested to choose $k>>>S$, where $S$ is the final number of clusters. In practice we use $k=\left\lfloor\sqrt{n}\right\rfloor$, where $n$ is the number of samples.
 -   More the number of knots, better will be the representation. However, too many knots will make the density estimation in the later stage problematic.
 
 ## Knot Construction
@@ -166,7 +166,7 @@ grid.arrange(gg1,gg2,ncol=2)
 
 Let $c_1,c_2,\ldots,c_k$ be the given knots and we use $\mathcal{C}=\left\{c_1,c_2,\ldots,c_k\right\}$ to denote their collection of them.
 
--   The Voronoi cell, or Voronoi region, $\mathbb{C}_j$ associated with a knot $c_j$ is the set of all points in $\mathcal{X}$ whose distance to $c_j$ is the smallest compared to other knots. That is, $\mathbb{C}_j=\left\{ \boldsymbol{x}\in\mathcal{X}:d\left(\boldsymbol{x},c_j\right)\leq d\left(\boldsymbol{x},c_\ell\right)\forall \ell\neq j\right\}$ where $d\left(\boldsymbol{x},\boldsymbol{y}\right)$ is the usual Euclidean distance.
+-   The **Voronoi cell**, or **Voronoi region**, $\mathbb{C}_j$ associated with a knot $c_j$ is the set of all points in $\mathcal{X}$ whose distance to $c_j$ is the smallest compared to other knots. That is, $\mathbb{C}_j=\left\{ \boldsymbol{x}\in\mathcal{X}:d\left(\boldsymbol{x},c_j\right)\leq d\left(\boldsymbol{x},c_\ell\right)\forall \ell\neq j\right\}$ where $d\left(\boldsymbol{x},\boldsymbol{y}\right)$ is the usual Euclidean distance.
 
 ## Edge Construction
 
@@ -294,7 +294,7 @@ ggplot(data = cbind(data, X_lab_VD)) + geom_point(aes(X_1, X_2), col = X_lab_VD,
 
 -   Given a metric $d$ on $\mathbb{R}^d$, the $2$-Nearest-Neighbor ($2$-NN) region of a pair of knots $\left(c_j,c_\ell\right)$ is defined as,
 
-    -   $$ A_{j\ell}=\left\{\boldsymbol{x}\in \mathcal{X}:d\left(\boldsymbol{x},c_i\right)>\max\left\{d\left(\boldsymbol{x},c_i\right),d\left(\boldsymbol{x},c_\ell\right)\right\}\forall i\neq j,\ell\right\} $$
+    -   $$ A_{j\ell}=\left\{\boldsymbol{x}\in \mathcal{X}:d\left(\boldsymbol{x},c_i\right)>\max\left\{d\left(\boldsymbol{x},c_j\right),d\left(\boldsymbol{x},c_\ell\right)\right\}\forall i\neq j,\ell\right\} $$
 
 -   Following the idea of density-based clustering, two knots $c_j,c_\ell$ belong to the same clusters if they are in a connected high-density region, and we would expect the $2$-NN region of $c_j,c_\ell$ to have a high probability measure. Hence $\mathbb{P}\left(A_{j\ell}\right)$ can measure the association between the knots.
 
