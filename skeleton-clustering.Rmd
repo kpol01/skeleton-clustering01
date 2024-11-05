@@ -59,16 +59,16 @@ Yinyang_data = function(n_m=400,n_c=200,n_r=2000,sd_c=0.1,sd_r=0.1, d=2, sd_high
 library(ggplot2)
 
 data=as.data.frame(Yinyang_data())
-ggplot(data = data) + geom_point(aes(x = data.x, y = data.y))
+ggplot(data = data) + geom_point(aes(x = data.x, y = data.y))+labs(x=TeX("$\\X_1$"),y=TeX("$\\X_2$"),title="YinYang Data in two dimension")
 ```
 
 ## Result of k-means Clustering
 
 ```{r out.height="80%", fig.align="center"}
-kmean <- kmeans(data, centers = 5, algorithm = "Lloyd", iter.max = 50)
+kmean <- kmeans(data, centers = 5)
 centers <- kmean$cluster
 
-ggplot(data = cbind(data, centers)) + geom_point(aes(data.x, data.y), col = centers)
+ggplot(data = cbind(data, centers)) + geom_point(aes(data.x, data.y), col = centers)+labs(x=TeX("$\\X_1$"),y=TeX("$\\X_2$"),title="K-means clustering on YinYang Data",caption = "k=5")
 ```
 
 ## Result of Hierarchical Clustering
@@ -81,7 +81,7 @@ datac <- cbind(datac, noise)
 clust <- agnes(datac, method = "single")
 groups <- cutree(clust, k=5)
 
-ggplot(data = cbind(datac, groups)) + geom_point(aes(x, y), col = groups)
+ggplot(data = cbind(datac, groups)) + geom_point(aes(x, y), col = groups)+labs(x=TeX("$\\X_1$"),y=TeX("$\\X_2$"),title="Agglomerative Nesting on YinYang Data",caption="k=5")
 ```
 
 ## Skeleton Clustering Framework.
@@ -152,14 +152,13 @@ library(gridExtra)
 library(latex2exp)
 df=Yinyang_data(n_c = 0,n_r = 0)
 gg1=ggplot(data=data.frame("X_1"=df$data[,1],"X_2"=df$data[,2]),aes(x=X_1,y=X_2))+
-  geom_point()+labs(x=TeX("$\\X_1$"),y=TeX("$\\X_2$"))
+  geom_point()+labs(x=TeX("$\\X_1$"),y=TeX("$\\X_2$"),title="YinYang Data with \n two moon shaped regions")
 df_km=kmeans(df$data,centers=20)
 gg2=ggplot(data=data.frame("X_1"=df$data[,1],"X_2"=df$data[,2]),aes(x=X_1,y=X_2))+
-  geom_point(col="darkgrey")+labs(x=TeX("$\\X_1$"),y=TeX("$\\X_2$"))+
+  geom_point(col="darkgrey")+labs(x=TeX("$\\X_1$"),y=TeX("$\\X_2$"),title="Knots obtained via 20-means")+
   geom_point(data=data.frame("X"=df_km$centers[,1],"Y"=df_km$centers[,2]),aes(x=X,y=Y),col="red",size=2)+
   geom_text(data=data.frame("X"=df_km$centers[,1],"Y"=df_km$centers[,2],"l"=1:20),aes(x=X,y=Y,label=l,hjust=-0.1,vjust=-0.5))
 grid.arrange(gg1,gg2,ncol=2)
-
 ```
 
 ## Edge construction
@@ -194,7 +193,7 @@ data=data.frame("X_1"=df$data[,1],"X_2"=df$data[,2])
 skeleton = skeletonCons(data, rep = 1000, k = 20)
 
 ggplot(as.data.frame(skeleton$centers), aes(X_1,X_2)) + stat_voronoi(geom = "path", lty = 2) +geom_point(data = data, col = 'darkgrey', size = 2) + 
-  geom_point(data = as.data.frame(skeleton$centers), col = 'red', size = 4)
+  geom_point(data = as.data.frame(skeleton$centers), col = 'red', size = 4)+labs(x=TeX("$\\X_1$"),y=TeX("$\\X_2$"),title = "Voronoi Tesselation")
 ```
 
 ## Edge Construction
@@ -236,7 +235,7 @@ delaunay_df <- data.frame(x = c(delaunay_edges$x1, delaunay_edges$x2),
 ```{r warning=FALSE, out.height="80%", fig.asp = 2, fig.align = 'center'}
 ggplot(as.data.frame(skeleton$centers), aes(X_1,X_2)) + stat_voronoi(geom = "path", lty = 4, col = "blue") +geom_point(data = data, col = 'darkgrey') + 
   geom_point(data = as.data.frame(skeleton$centers), col = 'red', size = 8) +
-  geom_segment(data = delaunay_edges, aes(x = x1, y = y1, xend = x2, yend = y2))
+  geom_segment(data = delaunay_edges, aes(x = x1, y = y1, xend = x2, yend = y2))+labs(x=TeX("$\\X_1$"),y=TeX("$\\X_2$"),title = "Skeleton")
 ```
 
 ## Edge Weight Construction.
@@ -266,7 +265,7 @@ VD_tmp = as.dist(VD_tmp)
 VD_hclust = hclust(VD_tmp, method="single")
 
 library(ggdendro)
-ggdendrogram(VD_hclust, rotate = T)
+ggdendrogram(VD_hclust, rotate = T)+labs(title="Dendogram for knot segmentation",y="Knots")
 ```
 
 ## Final Clustering Result
@@ -276,7 +275,7 @@ VD_lab = cutree(VD_hclust, k=2)
 X_lab_VD = VD_lab[skeleton$cluster]
 
 
-ggplot(data = cbind(data, X_lab_VD)) + geom_point(aes(X_1, X_2), col = X_lab_VD, size = 4)
+ggplot(data = cbind(data, X_lab_VD)) + geom_point(aes(X_1, X_2), col = X_lab_VD, size = 4)+labs(x=TeX("$\\X_1$"),y=TeX("$\\X_2$"),title="Clusters obtained from Skeleton")
 
 #ggplot(data = cbind(data, X_lab_VD)) + geom_point(aes(X_1, X_2), col = X_lab_VD)
 
@@ -337,9 +336,9 @@ delaunay_df <- data.frame(x = c(delaunay_edges$x1, delaunay_edges$x2),
                           group = rep(1:nrow(delaunay_edges), each = 2))
 
 
-ggplot(as.data.frame(skeleton$centers), aes(X_1,X_2)) + stat_voronoi(geom = "path", lty = 2, col = "blue") +geom_point(data = data, col = 'darkgrey') + 
+ggplot(as.data.frame(skeleton$centers), aes(V1,V2)) + stat_voronoi(geom = "path", lty = 2, col = "blue") +geom_point(data = data, col = 'darkgrey') + 
   geom_point(data = as.data.frame(skeleton$centers), col = 'red', size = 2) +
-  geom_segment(data = delaunay_edges, aes(x = x1, y = y1, xend = x2, yend = y2))
+  geom_segment(data = delaunay_edges, aes(x = x1, y = y1, xend = x2, yend = y2))+labs(x=TeX("$\\X_1$"),y=TeX("$\\X_2$"),title="Skeleton of the YinYang Data")
 ```
 
 ## Final Result Using Skeleton Clustering
@@ -363,7 +362,7 @@ VD_lab = cutree(VD_hclust, k=5)
 X_lab_VD = VD_lab[skeleton$cluster]
 #plot(data[,1], data[,2], col = X_lab_VD, main = "Skeleton Clustering with Voronoi Density", xlab = "X", ylab = "Y", cex.main=1.5)
 
-ggplot(data = cbind(data, X_lab_VD)) + geom_point(aes(X_1, X_2), col = X_lab_VD)
+ggplot(data = cbind(data, X_lab_VD)) + geom_point(aes(V1, V2), col = X_lab_VD)+labs(x=TeX("$\\X_1$"),y=TeX("$\\X_2$"),title="Clusters obtained from the Skeleton")
 
 ```
 
