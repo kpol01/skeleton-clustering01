@@ -411,4 +411,8 @@ when $n\rightarrow\infty,k\rightarrow\infty,\frac{n}{k}\rightarrow\infty$
 
 -   R. Maitra. Initializing partition-optimization algorithms. IEEE/ACM Transactions on Computational Biology and Bioinformatics, 6(1):144--157, 2009. doi: 10.1109/TCBB.2007.70244.
 
-## Thanks for listening! :)
+## \vspace{-2em}
+
+\begin{center}
+\Huge Thanks for listening! :)
+\end{center}
