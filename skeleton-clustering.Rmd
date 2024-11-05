@@ -2,7 +2,7 @@
 title: "Skeleton Clustering : A Dimension free Density-Aided Clustering"
 author: "| Kaustav Paul\n| Sourav Biswas \n"
 institute: "Indian Statistical Institute, Kolkata"
-date: "`r Sys.Date()`"
+date: "November 06, 2024"
 output: 
   beamer_presentation:
     theme: "AnnArbor"
@@ -30,6 +30,7 @@ knitr::opts_chunk$set(echo = FALSE)
 We consider a 100 dimensional data where the first two dimensions have the following structure. The rest 98 are random noise from $N(0,1)$.
 
 ```{r, out.height="70%", fig.align="center"}
+library(latex2exp)
 set.seed(seed=1234)
 Yinyang_data = function(n_m=400,n_c=200,n_r=2000,sd_c=0.1,sd_r=0.1, d=2, sd_high=0.1){
   X_m = clusterSim::shapes.two.moon(n_m)
@@ -336,7 +337,7 @@ delaunay_df <- data.frame(x = c(delaunay_edges$x1, delaunay_edges$x2),
                           group = rep(1:nrow(delaunay_edges), each = 2))
 
 
-ggplot(as.data.frame(skeleton$centers), aes(V1,V2)) + stat_voronoi(geom = "path", lty = 2, col = "blue") +geom_point(data = data, col = 'darkgrey') + 
+ggplot(as.data.frame(skeleton$centers), aes(X_1,X_2)) + stat_voronoi(geom = "path", lty = 2, col = "blue") +geom_point(data = data, col = 'darkgrey') + 
   geom_point(data = as.data.frame(skeleton$centers), col = 'red', size = 2) +
   geom_segment(data = delaunay_edges, aes(x = x1, y = y1, xend = x2, yend = y2))+labs(x=TeX("$\\X_1$"),y=TeX("$\\X_2$"),title="Skeleton of the YinYang Data")
 ```
@@ -362,7 +363,7 @@ VD_lab = cutree(VD_hclust, k=5)
 X_lab_VD = VD_lab[skeleton$cluster]
 #plot(data[,1], data[,2], col = X_lab_VD, main = "Skeleton Clustering with Voronoi Density", xlab = "X", ylab = "Y", cex.main=1.5)
 
-ggplot(data = cbind(data, X_lab_VD)) + geom_point(aes(V1, V2), col = X_lab_VD)+labs(x=TeX("$\\X_1$"),y=TeX("$\\X_2$"),title="Clusters obtained from the Skeleton")
+ggplot(data = cbind(data, X_lab_VD)) + geom_point(aes(X_1, X_2), col = X_lab_VD)+labs(x=TeX("$\\X_1$"),y=TeX("$\\X_2$"),title="Clusters obtained from the Skeleton")
 
 ```
 
