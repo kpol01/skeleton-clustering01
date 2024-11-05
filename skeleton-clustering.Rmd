@@ -96,9 +96,9 @@ ggplot(data = cbind(datac, groups)) + geom_point(aes(x, y), col = groups)
 
 ## Knot construction
 
--   Some knots are constructed to give a concise representation of the data structure.
--   In practice we use $k$-Means to choose $k=\left\lfloor\sqrt{n}\right\rfloor$ knots, where $n$ is the number of samples.
--   Empirically robustness performance with sufficient number of knots.
+-   Some knots are constructed to give a concise representation of the data structure. One can use $k$-means algorithm to get such a representation. 
+- It is suggested to choose $k>>>S$, where $S$ is the final number of clusters.  In practice we use  $k=\left\lfloor\sqrt{n}\right\rfloor$, where $n$ is the number of samples.
+-   More the number of knots, better will be the representation. However, too many knots will make the density estimation in the later stage problematic.
 
 ## Knot Construction
 
