@@ -201,7 +201,9 @@ ggplot(as.data.frame(skeleton$centers), aes(X_1,X_2)) + stat_voronoi(geom = "pat
 
 -   We add an edge between a pair of knots if they are neighbors, with the neighboring condition being that the corresponding Voronoi cells share a common boundary.
 
--   Such resulting graph is the Delaunay Triangulation of the set of knots $\mathcal{C}$ and we denote is as $DT\left(\mathcal{C}\right)$.
+-   Such resulting graph is the **Delaunay Triangulation** of the set of knots $\mathcal{C}$ and we denote is as $DT\left(\mathcal{C}\right)$.
+
+    ![](images/Screenshot 2024-11-05 193746.png){width="95"}
 
 -   But in case of high dimensional data, it becomes computationally expensive. Therefore, in practice we approximate the exact Delaunay Triangulation with $\widehat{DT}\left(\mathcal{C}\right)$ by examining the 2-nearest knots of the sample data points.
 
