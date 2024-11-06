@@ -271,6 +271,14 @@ library(ggdendro)
 ggdendrogram(VD_hclust, rotate = T)+labs(title="Dendogram for knot segmentation",y="Knots")
 ```
 
+
+
+## How to choose the final number of Clusters ?
+
+-   The number of final clusters $S$ is an essential parameter for the hierarchical clustering procedure but can be unknown.
+
+-   An inferential choice can also be made using the gap statistics, Calinski-Harabascz index etc.
+
 ## Final Clustering Result
 
 ```{r warning=FALSE, out.height="80%", fig.asp = 2, fig.align = 'center'}
@@ -283,12 +291,6 @@ ggplot(data = cbind(data, X_lab_VD)) + geom_point(aes(X_1, X_2), col = X_lab_VD,
 #ggplot(data = cbind(data, X_lab_VD)) + geom_point(aes(X_1, X_2), col = X_lab_VD)
 
 ```
-
-## How to choose the final number of Clusters ?
-
--   The number of final clusters $S$ is an essential parameter for the hierarchical clustering procedure but can be unknown.
-
--   An inferential choice can also be made using the gap statistics, Calinski-Harabascz index etc.
 
 ## Some feasible density functions
 
