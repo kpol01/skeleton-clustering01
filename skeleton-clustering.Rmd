@@ -272,6 +272,20 @@ ggdendrogram(VD_hclust, rotate = T)+labs(title="Dendogram for knot segmentation"
 ```
 
 
+## Knot Segmentation
+
+```{r warning=FALSE, out.height="80%", fig.asp = 2, fig.align = 'center'}
+library(cluster)
+
+clust <- agnes(knots, method = "single")
+
+
+groups <- cutree(clust, k=2)
+df1 <- cbind(knots, groups)
+
+ggplot(data = df1)  + geom_point(data = data, aes(X_1, X_2), col = "grey") + geom_point(aes(x=X_1, y=X_2), col = groups, size = 4) + labs(x=TeX("$\\X_1$"),y=TeX("$\\X_2$"),title = "Clustering on the knots")
+```
+
 
 ## How to choose the final number of Clusters ?
 
