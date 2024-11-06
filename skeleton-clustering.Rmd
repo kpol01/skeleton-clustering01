@@ -241,7 +241,7 @@ ggplot(as.data.frame(skeleton$centers), aes(X_1,X_2)) + stat_voronoi(geom = "pat
   geom_segment(data = delaunay_edges, aes(x = x1, y = y1, xend = x2, yend = y2))+labs(x=TeX("$\\X_1$"),y=TeX("$\\X_2$"),title = "Skeleton")
 ```
 
-## Edge Weight Construction.
+## Edge Weight Construction
 
 -   Given the constructed edges and knots, we assign each edge a weight that represents the similarity between the pair of knots.
 
@@ -249,7 +249,7 @@ ggplot(as.data.frame(skeleton$centers), aes(X_1,X_2)) + stat_voronoi(geom = "pat
 
 -   The estimations of the newly proposed similarity measures are reliable even under high-dimensional settings.
 
-## Knot Segmentation.
+## Knot Segmentation
 
 Given the weighted skeleton graph, the next step is to partition the knots into the desired number of final clusters.
 
